@@ -46,8 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\Answers.cs" />
-    <Compile Include="Models\ImagesAnswer.cs" />
-    <Compile Include="Models\ImagesQuestion.cs" />
     <Compile Include="Models\Questions.cs" />
     <Compile Include="Models\Reunions.cs" />
     <Compile Include="Models\Skills.cs" />

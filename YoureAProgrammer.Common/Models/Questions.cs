@@ -14,13 +14,14 @@
         [Required]
         public string Description { get; set; }
 
+        public string ImageFullPath { get; set; }
+
         //public user UserID { get; set; }
 
         public int SkillId { get; set; }
         [ForeignKey("SkillId")]
         public virtual Skills Skills { get; set; }
 
-        public virtual ICollection<ImagesQuestion> ImagesQuestion { get; set; }
 
         public virtual ICollection<Answers> Answers { get; set; }
     }

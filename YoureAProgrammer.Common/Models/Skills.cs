@@ -15,6 +15,5 @@
 
         public virtual ICollection<Reunions> Reunions { get; set; }
 
-        //public virtual ICollection<UserSkills> UserSkills { get; set; }
     }
 }

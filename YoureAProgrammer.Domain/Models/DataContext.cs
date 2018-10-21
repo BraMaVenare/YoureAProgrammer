@@ -12,8 +12,6 @@
         public virtual DbSet<Skills> Skills { set; get; }
         public virtual DbSet<Questions> Questions { set; get; }
         public virtual DbSet<Reunions> Reunions { set; get; }
-        public virtual DbSet<ImagesQuestion> ImagesQuestion { set; get; }
         public virtual DbSet<Answers> Answers { set; get; }
-        public virtual DbSet<ImagesAnswer> ImagesAnswer { set; get; }
     }
 }
