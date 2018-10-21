@@ -1,0 +1,50 @@
+﻿@model YoureAProgrammer.Common.Models.Reunions
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Reunions</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Skills.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Skills.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Localizate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Localizate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ReunionId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
