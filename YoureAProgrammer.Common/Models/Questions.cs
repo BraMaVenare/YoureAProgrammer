@@ -24,5 +24,10 @@
 
 
         public virtual ICollection<Answers> Answers { get; set; }
+
+        public override string ToString()
+        {
+            return this.Title;
+        }
     }
 }

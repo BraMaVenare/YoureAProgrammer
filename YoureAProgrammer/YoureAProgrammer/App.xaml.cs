@@ -5,13 +5,14 @@ using Xamarin.Forms.Xaml;
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]
 namespace YoureAProgrammer
 {
+    using Views;
     public partial class App : Application
     {
         public App()
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new QuestionsPage();
         }
 
         protected override void OnStart()

@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Models\Answers.cs" />
     <Compile Include="Models\Questions.cs" />
+    <Compile Include="Models\Response.cs" />
     <Compile Include="Models\Reunions.cs" />
     <Compile Include="Models\Skills.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -54,6 +55,5 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
