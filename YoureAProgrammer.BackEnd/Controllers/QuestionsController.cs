@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using YoureAProgrammer.BackEnd.Models;
 using YoureAProgrammer.Common.Models;
+using YoureAProgrammer.BackEnd.Helpers;
 
 namespace YoureAProgrammer.BackEnd.Controllers
 {
@@ -50,17 +51,38 @@ namespace YoureAProgrammer.BackEnd.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "QuestionID,Title,Description,ImageFullPath,SkillId")] Questions questions)
+        public async Task<ActionResult> Create(QuestionView view)
         {
             if (ModelState.IsValid)
             {
+                var pic = string.Empty;
+                var folder = "~/Content/Questions";
+
+                if (view.ImageFile != null)
+                {
+                    pic = FilesHelper.UploadPhoto(view.ImageFile, folder);
+                    pic = $"{folder}/{pic}";
+                }
+                var questions = this.ToQuestion(view, pic);
                 db.Questions.Add(questions);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.SkillId = new SelectList(db.Skills, "SkillId", "Name", questions.SkillId);
-            return View(questions);
+            ViewBag.SkillId = new SelectList(db.Skills, "SkillId", "Name", view.SkillId);
+            return View(view);
+        }
+
+        private Questions ToQuestion(QuestionView view, string pic)
+        {
+            return new Questions
+            {
+                QuestionID = view.QuestionID,
+                Title = view.Title,
+                Description = view.Description,
+                ImagePath= pic,
+                SkillId = view.SkillId,          
+            };
         }
 
         // GET: Questions/Edit/5
@@ -75,8 +97,21 @@ namespace YoureAProgrammer.BackEnd.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.SkillId = new SelectList(db.Skills, "SkillId", "Name", questions.SkillId);
-            return View(questions);
+            var view = this.toView(questions);
+            ViewBag.SkillId = new SelectList(db.Skills, "SkillId", "Name", view.SkillId);
+            return View(view);
+        }
+
+        private QuestionView toView(Questions questions)
+        {
+            return new QuestionView
+            {
+                QuestionID = questions.QuestionID,
+                Title = questions.Title,
+                Description = questions.Description,
+                ImagePath = questions.ImagePath,
+                SkillId = questions.SkillId,
+            };
         }
 
         // POST: Questions/Edit/5
@@ -84,16 +119,25 @@ namespace YoureAProgrammer.BackEnd.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "QuestionID,Title,Description,ImageFullPath,SkillId")] Questions questions)
+        public async Task<ActionResult> Edit(QuestionView view)
         {
             if (ModelState.IsValid)
             {
+                var pic = view.ImagePath;
+                var folder = "~/Content/Questions";
+
+                if (view.ImageFile != null)
+                {
+                    pic = FilesHelper.UploadPhoto(view.ImageFile, folder);
+                    pic = $"{folder}/{pic}";
+                }
+                var questions = this.ToQuestion(view, pic);
                 db.Entry(questions).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.SkillId = new SelectList(db.Skills, "SkillId", "Name", questions.SkillId);
-            return View(questions);
+            ViewBag.SkillId = new SelectList(db.Skills, "SkillId", "Name", view.SkillId);
+            return View(view);
         }
 
         // GET: Questions/Delete/5

@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using YoureAProgrammer.BackEnd.Models;
 using YoureAProgrammer.Common.Models;
+using YoureAProgrammer.BackEnd.Helpers;
 
 namespace YoureAProgrammer.BackEnd.Controllers
 {
@@ -50,17 +51,37 @@ namespace YoureAProgrammer.BackEnd.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "AnswersId,Description,ImageFullPath,QuestionID")] Answers answers)
+        public async Task<ActionResult> Create(AnswerView view)
         {
             if (ModelState.IsValid)
             {
+                var pic = string.Empty;
+                var folder = "~/Content/Answers";
+
+                if (view.ImageFile != null)
+                {
+                    pic = FilesHelper.UploadPhoto(view.ImageFile, folder);
+                    pic = $"{folder}/{pic}";
+                }
+                var answers = this.ToAnswer(view, pic);
                 db.Answers.Add(answers);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.QuestionID = new SelectList(db.Questions, "QuestionID", "Title", answers.QuestionID);
-            return View(answers);
+            ViewBag.QuestionID = new SelectList(db.Questions, "QuestionID", "Title", view.QuestionID);
+            return View(view);
+        }
+
+        private Answers ToAnswer(AnswerView view, string pic)
+        {
+            return new Answers
+            {
+                AnswersId= view.AnswersId,
+                Description= view.Description,
+                ImagePath = pic,
+                QuestionID = view.QuestionID
+            };
         }
 
         // GET: Answers/Edit/5
@@ -75,25 +96,44 @@ namespace YoureAProgrammer.BackEnd.Controllers
             {
                 return HttpNotFound();
             }
+            var view = this.toView(answers);
             ViewBag.QuestionID = new SelectList(db.Questions, "QuestionID", "Title", answers.QuestionID);
-            return View(answers);
+            return View(view);
         }
-
+        private AnswerView toView(Answers answer)
+        {
+            return new AnswerView
+            {
+                AnswersId = answer.AnswersId,
+                Description = answer.Description,
+                ImagePath = answer.ImagePath,
+                QuestionID = answer.QuestionID,
+            };
+        }
         // POST: Answers/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "AnswersId,Description,ImageFullPath,QuestionID")] Answers answers)
+        public async Task<ActionResult> Edit(AnswerView view)
         {
             if (ModelState.IsValid)
             {
+                var pic = view.ImagePath;
+                var folder = "~/Content/Answers";
+
+                if (view.ImageFile != null)
+                {
+                    pic = FilesHelper.UploadPhoto(view.ImageFile, folder);
+                    pic = $"{folder}/{pic}";
+                }
+                var answers = this.ToAnswer(view, pic);
                 db.Entry(answers).State = EntityState.Modified;
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.QuestionID = new SelectList(db.Questions, "QuestionID", "Title", answers.QuestionID);
-            return View(answers);
+            ViewBag.QuestionID = new SelectList(db.Questions, "QuestionID", "Title", view.QuestionID);
+            return View(view);
         }
 
         // GET: Answers/Delete/5
